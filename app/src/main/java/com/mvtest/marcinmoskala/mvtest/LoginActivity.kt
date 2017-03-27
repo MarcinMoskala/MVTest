@@ -40,71 +40,27 @@ class LoginActivity : AppCompatActivity() {
     private val loginFormView: View by bindView(R.id.login_form)
     private val emailSignInButton: Button by bindView(R.id.email_sign_in_button)
 
-    val loginRepository by LoginRepository.lazyGet()
+    val controller by lazy { LoginController(this, emailView, passwordView) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         passwordView.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
             if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                attemptLogin()
+                controller.attemptLogin()
                 return@OnEditorActionListener true
             }
             false
         })
-        emailSignInButton.setOnClickListener { attemptLogin() }
+        emailSignInButton.setOnClickListener { controller.attemptLogin() }
     }
 
-    private fun attemptLogin() {
-        emailView.error = null
-        passwordView.error = null
-
-        val email = emailView.text.toString()
-        val password = passwordView.text.toString()
-
-        var cancel = false
-        var focusView: View? = null
-
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            passwordView.error = getString(R.string.error_invalid_password)
-            focusView = passwordView
-            cancel = true
-        }
-
-        if (TextUtils.isEmpty(email)) {
-            emailView.error = getString(R.string.error_field_required)
-            focusView = emailView
-            cancel = true
-        } else if (!isEmailValid(email)) {
-            emailView.error = getString(R.string.error_invalid_email)
-            focusView = emailView
-            cancel = true
-        }
-
-        if (cancel) {
-            focusView!!.requestFocus()
-        } else {
-            loginRepository.attemptLogin(email, password)
-                    .applySchedulers()
-                    .smartSubscribe(
-                            onStart = { showProgress(true) },
-                            onSuccess = { (token) -> toast("Login succeed. Token: $token") },
-                            onError = { toast("Error occurred") },
-                            onFinish = { showProgress(false) }
-                    )
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        controller.onDestroy()
     }
 
-    private fun isEmailValid(email: String): Boolean {
-        return email.contains("@")
-    }
-
-    private fun isPasswordValid(password: String): Boolean {
-        return password.length > 4
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private fun showProgress(show: Boolean) {
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2) fun showProgress(show: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime)
 
