@@ -60,29 +60,9 @@ class LoginActivity : AppCompatActivity() {
         controller.onDestroy()
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2) fun showProgress(show: Boolean) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime)
-
-            loginFormView.visibility = if (show) View.GONE else View.VISIBLE
-            loginFormView.animate().setDuration(shortAnimTime.toLong()).alpha(
-                    (if (show) 0 else 1).toFloat()).setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    loginFormView.visibility = if (show) View.GONE else View.VISIBLE
-                }
-            })
-
-            progressView.visibility = if (show) View.VISIBLE else View.GONE
-            progressView.animate().setDuration(shortAnimTime.toLong()).alpha(
-                    (if (show) 1 else 0).toFloat()).setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    progressView.visibility = if (show) View.VISIBLE else View.GONE
-                }
-            })
-        } else {
-            progressView.visibility = if (show) View.VISIBLE else View.GONE
-            loginFormView.visibility = if (show) View.GONE else View.VISIBLE
-        }
+    fun showProgress(show: Boolean) {
+        progressView.visibility = if (show) View.VISIBLE else View.GONE
+        loginFormView.visibility = if (show) View.GONE else View.VISIBLE
     }
 }
 
