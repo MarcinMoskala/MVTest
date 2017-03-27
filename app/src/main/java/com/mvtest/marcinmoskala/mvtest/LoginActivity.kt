@@ -52,7 +52,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
         setContentView(R.layout.activity_login)
         passwordView.setOnEditorActionListener { _, id, _ ->
             when (id) {
-                R.id.login, EditorInfo.IME_NULL -> {
+                EditorInfo.IME_NULL -> {
                     presenter.attemptLogin()
                     true
                 }
