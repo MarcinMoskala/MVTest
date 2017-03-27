@@ -1,11 +1,11 @@
 package com.mvtest.marcinmoskala.mvtest
 
 interface LoginView {
-    fun showProgress(show: Boolean)
-    fun getEmail(): String
-    fun getPassword(): String
-    fun setEmailError(id: Int?)
-    fun setPasswordError(id: Int?)
+    var progressVisible: Boolean
+    var email: String
+    var password: String
+    var emailErrorId: Int?
+    var passwordErrorId: Int?
     fun requestEmailFocus()
     fun requestPasswordFocus()
     fun informAboutLoginSuccess(token: String)

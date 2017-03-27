@@ -6,7 +6,7 @@ import android.widget.EditText
 import rx.Subscription
 import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
 
-class LoginController(val view: LoginView) {
+class LoginPresenter(val view: LoginView) {
 
     val loginRepository by LoginRepository.lazyGet()
     var subscriptions: List<Subscription> = emptyList()
@@ -16,18 +16,15 @@ class LoginController(val view: LoginView) {
     }
 
     fun attemptLogin() {
-        val email = view.getEmail()
-        val password = view.getPassword()
+        val email = view.email
+        val password = view.password
 
-        val passwordErrorId = getPasswordErrorId(password)
-        view.setPasswordError(passwordErrorId)
-
-        val emailErrorId = getEmailErrorId(email)
-        view.setEmailError(emailErrorId)
+        view.passwordErrorId = getPasswordErrorId(password)
+        view.emailErrorId = getEmailErrorId(email)
 
         when {
-            emailErrorId != null -> view.requestEmailFocus()
-            passwordErrorId != null -> view.requestPasswordFocus()
+            view.emailErrorId != null -> view.requestEmailFocus()
+            view.passwordErrorId != null -> view.requestPasswordFocus()
             else -> sendLoginRequest(email, password)
         }
     }
@@ -36,10 +33,10 @@ class LoginController(val view: LoginView) {
         subscriptions += loginRepository.attemptLogin(email, password)
                 .applySchedulers()
                 .smartSubscribe(
-                        onStart = { view.showProgress(true) },
+                        onStart = { view.progressVisible = true },
                         onSuccess = { (token) -> view.informAboutLoginSuccess(token) },
                         onError = { view.informAboutError(it) },
-                        onFinish = { view.showProgress(false) }
+                        onFinish = { view.progressVisible = false }
                 )
     }
 

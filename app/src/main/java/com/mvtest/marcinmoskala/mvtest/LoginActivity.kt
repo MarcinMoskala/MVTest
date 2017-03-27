@@ -31,19 +31,40 @@ import android.widget.TextView
 import java.util.ArrayList
 
 import android.Manifest.permission.READ_CONTACTS
+import kotlinx.android.synthetic.main.activity_login.*
+import kotlin.properties.Delegates
 
 class LoginActivity : AppCompatActivity(), LoginView {
 
-    override fun getEmail(): String = emailView.text.toString()
+    override var progressVisible by Delegates.observable(false) { _, _, n ->
+        progressView.visibility = if (n) View.VISIBLE else View.GONE
+        loginFormView.visibility = if (n) View.GONE else View.VISIBLE
+    }
+    override var email: String by bindToText { emailView }
+    override var password: String by bindToText { passwordView }
+    override var emailErrorId: Int? by bindToErrorId { emailView }
+    override var passwordErrorId: Int? by bindToErrorId { passwordView }
 
-    override fun getPassword(): String = passwordView.text.toString()
+    val presenter by lazy { LoginPresenter(this) }
 
-    override fun setEmailError(id: Int?) {
-        emailView.setErrorId(id)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_login)
+        passwordView.setOnEditorActionListener { _, id, _ ->
+            when (id) {
+                R.id.login, EditorInfo.IME_NULL -> {
+                    presenter.attemptLogin()
+                    true
+                }
+                else -> false
+            }
+        }
+        loginButton.setOnClickListener { presenter.attemptLogin() }
     }
 
-    override fun setPasswordError(id: Int?) {
-        passwordView.setErrorId(id)
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDestroy()
     }
 
     override fun requestEmailFocus() {
@@ -60,37 +81,6 @@ class LoginActivity : AppCompatActivity(), LoginView {
 
     override fun informAboutError(error: Throwable) {
         toast("Error: "+error.message)
-    }
-
-    private val emailView: AutoCompleteTextView by bindView(R.id.email)
-    private val passwordView: EditText by bindView(R.id.password)
-    private val progressView: View by bindView(R.id.login_progress)
-    private val loginFormView: View by bindView(R.id.login_form)
-    private val emailSignInButton: Button by bindView(R.id.email_sign_in_button)
-
-    val controller by lazy { LoginController(this) }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
-        passwordView.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
-            if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                controller.attemptLogin()
-                return@OnEditorActionListener true
-            }
-            false
-        })
-        emailSignInButton.setOnClickListener { controller.attemptLogin() }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        controller.onDestroy()
-    }
-
-    override fun showProgress(show: Boolean) {
-        progressView.visibility = if (show) View.VISIBLE else View.GONE
-        loginFormView.visibility = if (show) View.GONE else View.VISIBLE
     }
 }
 
