@@ -32,7 +32,35 @@ import java.util.ArrayList
 
 import android.Manifest.permission.READ_CONTACTS
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), LoginView {
+
+    override fun getEmail(): String = emailView.text.toString()
+
+    override fun getPassword(): String = passwordView.text.toString()
+
+    override fun setEmailError(id: Int?) {
+        emailView.setErrorId(id)
+    }
+
+    override fun setPasswordError(id: Int?) {
+        passwordView.setErrorId(id)
+    }
+
+    override fun requestEmailFocus() {
+        emailView.requestFocus()
+    }
+
+    override fun requestPasswordFocus() {
+        passwordView.requestFocus()
+    }
+
+    override fun informAboutLoginSuccess(token: String) {
+        toast("Login succeed. Token: $token")
+    }
+
+    override fun informAboutError(error: Throwable) {
+        toast("Error: "+error.message)
+    }
 
     private val emailView: AutoCompleteTextView by bindView(R.id.email)
     private val passwordView: EditText by bindView(R.id.password)
@@ -40,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
     private val loginFormView: View by bindView(R.id.login_form)
     private val emailSignInButton: Button by bindView(R.id.email_sign_in_button)
 
-    val controller by lazy { LoginController(this, emailView, passwordView) }
+    val controller by lazy { LoginController(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +88,7 @@ class LoginActivity : AppCompatActivity() {
         controller.onDestroy()
     }
 
-    fun showProgress(show: Boolean) {
+    override fun showProgress(show: Boolean) {
         progressView.visibility = if (show) View.VISIBLE else View.GONE
         loginFormView.visibility = if (show) View.GONE else View.VISIBLE
     }

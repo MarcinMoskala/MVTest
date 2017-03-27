@@ -6,7 +6,7 @@ import android.widget.EditText
 import rx.Subscription
 import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
 
-class LoginController(val view: LoginActivity, val emailView: EditText, val passwordView: EditText) {
+class LoginController(val view: LoginView) {
 
     val loginRepository by LoginRepository.lazyGet()
     var subscriptions: List<Subscription> = emptyList()
@@ -16,18 +16,18 @@ class LoginController(val view: LoginActivity, val emailView: EditText, val pass
     }
 
     fun attemptLogin() {
-        val email = emailView.text.toString()
-        val password = passwordView.text.toString()
+        val email = view.getEmail()
+        val password = view.getPassword()
 
         val passwordErrorId = getPasswordErrorId(password)
-        passwordView.setErrorId(passwordErrorId)
+        view.setPasswordError(passwordErrorId)
 
         val emailErrorId = getEmailErrorId(email)
-        emailView.setErrorId(emailErrorId)
+        view.setEmailError(emailErrorId)
 
         when {
-            emailErrorId != null -> emailView.requestFocus()
-            passwordErrorId != null -> passwordView.requestFocus()
+            emailErrorId != null -> view.requestEmailFocus()
+            passwordErrorId != null -> view.requestPasswordFocus()
             else -> sendLoginRequest(email, password)
         }
     }
@@ -37,8 +37,8 @@ class LoginController(val view: LoginActivity, val emailView: EditText, val pass
                 .applySchedulers()
                 .smartSubscribe(
                         onStart = { view.showProgress(true) },
-                        onSuccess = { (token) -> view.toast("Login succeed. Token: $token") },
-                        onError = { view.toast("Error occurred") },
+                        onSuccess = { (token) -> view.informAboutLoginSuccess(token) },
+                        onError = { view.informAboutError(it) },
                         onFinish = { view.showProgress(false) }
                 )
     }
@@ -54,11 +54,7 @@ class LoginController(val view: LoginActivity, val emailView: EditText, val pass
         else -> null
     }
 
-    private fun isEmailValid(email: String): Boolean {
-        return email.contains("@")
-    }
+    private fun isEmailValid(email: String): Boolean = email.contains("@")
 
-    private fun isPasswordValid(password: String): Boolean {
-        return password.length > 4
-    }
+    private fun isPasswordValid(password: String): Boolean = password.length > 4
 }
