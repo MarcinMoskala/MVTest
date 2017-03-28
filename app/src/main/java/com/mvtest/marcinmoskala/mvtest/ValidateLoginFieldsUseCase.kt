@@ -14,8 +14,9 @@ class ValidateLoginFieldsUseCase {
         else -> null
     }
 
-    private fun getPasswordErrorId(email: String) = when {
-        email.isEmpty() || isPasswordValid(email) -> R.string.error_invalid_password
+    private fun getPasswordErrorId(password: String) = when {
+        password.isEmpty() -> R.string.error_field_required
+        isPasswordValid(password) -> R.string.error_invalid_password
         else -> null
     }
 

@@ -34,8 +34,8 @@ class LoginPresenter(val view: LoginView) {
         view.passwordErrorId = passwordErrorId
         view.emailErrorId = emailErrorId
         when {
-            passwordErrorId != null -> view.requestPasswordFocus()
             emailErrorId != null -> view.requestEmailFocus()
+            passwordErrorId != null -> view.requestPasswordFocus()
         }
     }
 }
