@@ -1,10 +1,6 @@
 package com.mvtest.marcinmoskala.mvtest
 
-import android.text.TextUtils
-import android.view.View
-import android.widget.EditText
 import rx.Subscription
-import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
 
 class LoginPresenter(val view: LoginView) {
 

@@ -53,7 +53,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
     }
 
     override fun informAboutError(error: Throwable) {
-        toast("Error: "+error.message)
+        toast("Error: " + error.message)
     }
 
     override fun showProgress(show: Boolean) {
