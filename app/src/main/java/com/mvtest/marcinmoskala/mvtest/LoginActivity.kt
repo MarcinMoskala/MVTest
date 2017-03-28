@@ -3,17 +3,9 @@ package com.mvtest.marcinmoskala.mvtest
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.EditText
+import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity(), LoginView {
-
-    private val emailView: AutoCompleteTextView by bindView(R.id.email)
-    private val passwordView: EditText by bindView(R.id.password)
-    private val progressView: View by bindView(R.id.login_progress)
-    private val loginFormView: View by bindView(R.id.login_form)
-    private val emailSignInButton: Button by bindView(R.id.email_sign_in_button)
 
     val presenter by lazy { LoginPresenter(this) }
 
