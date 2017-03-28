@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <AutoCompleteTextView
+                <com.mvtest.marcinmoskala.mvtest.FormFieldView
                     android:id="@+id/emailView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <EditText
+                <com.mvtest.marcinmoskala.mvtest.FormFieldView
                     android:id="@+id/passwordView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
