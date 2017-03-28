@@ -15,7 +15,15 @@ class LoginPresenter(val view: LoginView) {
     fun attemptLogin() {
         val (email, password) = view.email to view.password
         subscriptions += validateLoginFieldsUseCase.validateLogin(email, password)
-                .smartSubscribe { if (it.correct) sendLoginRequest(email, password) else showLoginErrors(it) }
+                .smartSubscribe { (emailErrorId, passwordErrorId) ->
+                    view.passwordErrorId = passwordErrorId
+                    view.emailErrorId = emailErrorId
+                    when {
+                        emailErrorId != null -> view.requestEmailFocus()
+                        passwordErrorId != null -> view.requestPasswordFocus()
+                        else -> sendLoginRequest(email, password)
+                    }
+                }
     }
 
     private fun sendLoginRequest(email: String, password: String) {
@@ -27,15 +35,5 @@ class LoginPresenter(val view: LoginView) {
                         onError = view::informAboutError,
                         onFinish = { view.progressVisible = false }
                 )
-    }
-
-    private fun showLoginErrors(error: ValidateLoginFieldsUseCase.LoginErrors) {
-        val (emailErrorId, passwordErrorId) = error
-        view.passwordErrorId = passwordErrorId
-        view.emailErrorId = emailErrorId
-        when {
-            emailErrorId != null -> view.requestEmailFocus()
-            passwordErrorId != null -> view.requestPasswordFocus()
-        }
     }
 }
