@@ -1,6 +1,5 @@
 package com.mvtest.marcinmoskala.mvtest
 
-import android.app.Activity
 import android.content.Context
 import android.support.annotation.IdRes
 import android.support.v7.app.AppCompatActivity

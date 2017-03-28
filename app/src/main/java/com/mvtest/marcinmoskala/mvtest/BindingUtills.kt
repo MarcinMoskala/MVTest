@@ -1,7 +1,5 @@
 package com.mvtest.marcinmoskala.mvtest
 
-import android.app.Activity
-import android.support.annotation.IdRes
 import android.widget.EditText
 import android.widget.TextView
 import kotlin.properties.ReadWriteProperty
