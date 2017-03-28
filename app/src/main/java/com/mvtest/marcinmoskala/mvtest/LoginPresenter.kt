@@ -6,7 +6,7 @@ import android.widget.EditText
 import rx.Subscription
 import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
 
-class LoginController(val view: LoginView) {
+class LoginPresenter(val view: LoginView) {
 
     val loginRepository by LoginRepository.lazyGet()
     var subscriptions: List<Subscription> = emptyList()
@@ -45,16 +45,17 @@ class LoginController(val view: LoginView) {
 
     private fun getEmailErrorId(email: String) = when {
         email.isEmpty() -> R.string.error_field_required
-        !isEmailValid(email) -> R.string.error_invalid_email
+        emailInvalid(email) -> R.string.error_invalid_email
         else -> null
     }
 
-    private fun getPasswordErrorId(email: String) = when {
-        email.isEmpty() || isPasswordValid(email) -> R.string.error_invalid_password
+    private fun getPasswordErrorId(password: String) = when {
+        password.isEmpty() -> R.string.error_field_required
+        passwordInvalid(password) -> R.string.error_invalid_password
         else -> null
     }
 
-    private fun isEmailValid(email: String): Boolean = email.contains("@")
+    private fun emailInvalid(email: String): Boolean = !email.contains("@")
 
-    private fun isPasswordValid(password: String): Boolean = password.length > 4
+    private fun passwordInvalid(password: String): Boolean = password.length <= 4
 }
