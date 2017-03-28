@@ -10,16 +10,17 @@ class PasswordController(val passwordView: EditText) {
         val password = value()
         val passwordErrorId = getPasswordErrorId(password)
         passwordView.setErrorId(passwordErrorId)
-        if(passwordErrorId != null) passwordView.requestFocus()
+        if (passwordErrorId != null) passwordView.requestFocus()
         return passwordErrorId == null
     }
 
     private fun getPasswordErrorId(password: String) = when {
-        password.isEmpty() || isPasswordValid(password) -> R.string.error_invalid_password
+        password.isEmpty() -> R.string.error_field_required
+        passwordInvalid(password) -> R.string.error_invalid_password
         else -> null
     }
 
-    private fun isPasswordValid(password: String): Boolean = password.length > 4
+    private fun passwordInvalid(password: String): Boolean = password.length <= 4
 }
 
 

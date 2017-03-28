@@ -16,10 +16,10 @@ class EmailController(val emailView: EditText) {
 
     private fun getEmailErrorId(email: String) = when {
         email.isEmpty() -> R.string.error_field_required
-        !isEmailValid(email) -> R.string.error_invalid_email
+        emailInvalid(email) -> R.string.error_invalid_email
         else -> null
     }
 
-    private fun isEmailValid(email: String): Boolean = email.contains("@")
+    private fun emailInvalid(email: String): Boolean = !email.contains("@")
 }
 
