@@ -11,7 +11,7 @@ import rx.schedulers.Schedulers
 
 class LoginPresenterTest {
 
-    fun getMockView(email: String, password: String) = MockLoginView(email, password)
+    fun getMockView(email: String, password: String) = LoginViewMock(email, password)
 
     init {
         val rxAndroidPlugins = RxAndroidPlugins.getInstance()
@@ -44,7 +44,7 @@ class LoginPresenterTest {
     }
 
     @Test
-    fun checkEmailFieldErrored() {
+    fun checkEmailFieldError() {
         val mockedView = getMockView("MarcinMoskala", "KOKOKOKO")
         val presenter = LoginPresenter(mockedView)
         presenter.attemptLogin()
@@ -90,16 +90,16 @@ class LoginPresenterTest {
     }
 
     private fun checkVaildity(
-            mockedView: MockLoginView,
+            view: LoginViewMock,
             expectedEmailError: Int? = null,
             expectedPasswordError: Int? = null,
             expectedLoginCorrect: Boolean = false,
             expectedNetworkError: Boolean = false
     ) {
-        Assert.assertEquals(expectedEmailError, mockedView.mockedEmailError)
-        Assert.assertEquals(expectedPasswordError, mockedView.mockedPasswordError)
-        checkNull(expectedLoginCorrect, mockedView.isSuccessInformation)
-        checkNull(expectedNetworkError, mockedView.isNetworkErrorInformation)
+        Assert.assertEquals(expectedEmailError, view.mockedEmailError)
+        Assert.assertEquals(expectedPasswordError, view.mockedPasswordError)
+        checkNull(expectedLoginCorrect, view.isSuccessInformation)
+        checkNull(expectedNetworkError, view.isNetworkErrorInformation)
     }
 
     private fun checkNull(shouldBeNotnull: Boolean, value: Any?) {

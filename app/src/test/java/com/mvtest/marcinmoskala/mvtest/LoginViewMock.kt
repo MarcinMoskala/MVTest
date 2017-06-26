@@ -2,7 +2,7 @@ package com.mvtest.marcinmoskala.mvtest
 
 class
 
-MockLoginView(private val email: String, private val password: String): LoginView {
+LoginViewMock(private val email: String, private val password: String) : LoginView {
 
     var mockedProgressVisible = false
     var mockedEmailError: Int? = null
@@ -43,5 +43,5 @@ MockLoginView(private val email: String, private val password: String): LoginVie
         isNetworkErrorInformation = error.message
     }
 
-    enum class PossibleLoginFocus {NONE, EMAIL, PASS}
+    enum class PossibleLoginFocus {NONE, EMAIL, PASS }
 }
