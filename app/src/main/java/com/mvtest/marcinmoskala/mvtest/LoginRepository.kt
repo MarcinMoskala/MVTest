@@ -14,6 +14,7 @@ interface LoginRepository {
     }
 
     companion object {
-        fun lazyGet(): Lazy<LoginRepository> = lazy { MockLoginRepository() }
+        fun lazyGet(): Lazy<LoginRepository> = lazy { override ?: MockLoginRepository() }
+        var override: LoginRepository? = null
     }
 }
