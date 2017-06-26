@@ -22,6 +22,7 @@ android {
 }
 
 dependencies {
+    compile 'com.github.MarcinMoskala:KotlinAndroidViewBindings:0.08'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'io.reactivex:rxjava:1.1.6'
@@ -34,4 +35,5 @@ dependencies {
 }
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
