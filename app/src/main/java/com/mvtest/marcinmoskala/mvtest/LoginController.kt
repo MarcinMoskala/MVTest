@@ -4,8 +4,8 @@ import rx.Subscription
 
 class LoginController(val view: LoginActivity, val emailFieldView: FormFieldView, val passwordFieldView: FormFieldView) {
 
-    val loginRepository by LoginRepository.lazyGet()
-    var subscriptions: List<Subscription> = emptyList()
+    private val loginRepository by LoginRepository.lazyGet()
+    private var subscriptions: List<Subscription> = emptyList()
 
     fun onDestroy() {
         subscriptions.forEach { it.unsubscribe() }
