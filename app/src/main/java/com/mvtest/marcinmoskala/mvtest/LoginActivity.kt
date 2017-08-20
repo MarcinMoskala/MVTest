@@ -2,41 +2,37 @@ package com.mvtest.marcinmoskala.mvtest
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.marcinmoskala.kotlinandroidviewbindings.bindToErrorId
-import com.marcinmoskala.kotlinandroidviewbindings.bindToLoading
-import com.marcinmoskala.kotlinandroidviewbindings.bindToRequestFocus
-import com.marcinmoskala.kotlinandroidviewbindings.bindToText
+import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxTextView
+import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.activity_login.*
 
-class LoginActivity : AppCompatActivity(), LoginView {
+class LoginActivity : AppCompatActivity() {
 
-    override var progressVisible by bindToLoading(R.id.progressView, R.id.loginFormView)
-    override var email by bindToText(R.id.emailView)
-    override var password by bindToText(R.id.passwordView)
-    override var emailErrorId by bindToErrorId(R.id.emailView)
-    override var passwordErrorId by bindToErrorId(R.id.passwordView)
-    override val emailRequestFocus by bindToRequestFocus(R.id.emailView)
-    override val passwordRequestFocus by bindToRequestFocus(R.id.passwordView)
-
-    val presenter by lazy { LoginPresenter(this) }
+    val presenter by lazy {
+        LoginPresenter(
+                RxView.clicks(loginButton),
+                RxView.visibility(progressView),
+                RxView.visibility(loginFormView),
+                emailView.toSubject(),
+                passwordView.toSubject(),
+                emailView.errorRes(),
+                passwordView.errorRes(),
+                emailView.requestFocusConsumer(),
+                passwordView.requestFocusConsumer(),
+                Consumer { toast(it) }
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        loginButton.setOnClickListener { presenter.attemptLogin() }
+        presenter.onCreate()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         presenter.onDestroy()
-    }
-
-    override fun informAboutLoginSuccess(token: String) {
-        toast("Login succeed. Token: $token")
-    }
-
-    override fun informAboutError(error: Throwable) {
-        toast("Error: " + error.message)
     }
 }
 

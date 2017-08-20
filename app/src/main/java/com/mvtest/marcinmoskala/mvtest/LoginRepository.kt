@@ -1,6 +1,6 @@
 package com.mvtest.marcinmoskala.mvtest
 
-import rx.Observable
+import io.reactivex.Observable
 
 interface LoginRepository {
 

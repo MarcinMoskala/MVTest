@@ -22,7 +22,7 @@ class LoginPresenterTest {
     fun checkBothLoginFieldsEmpty() {
         // Given
         val view = LoginViewMock("", "")
-        val presenter = LoginPresenter(view)
+        val presenter = LoginPresenter(view, RxView.visibility(progressView), RxView.visibility(loginFormView), RxTextView.textChanges(emailView), RxTextView.textChanges(passwordView), RxTextView.errorRes(emailView), RxTextView.errorRes(passwordView), RxView.focusChanges(emailView), RxView.focusChanges(passwordView))
         // When
         presenter.attemptLogin()
         // Then
@@ -34,7 +34,7 @@ class LoginPresenterTest {
     fun checkBothLoginFieldsErrored() {
         // Given
         val view = LoginViewMock("MarcinMoskala", "KOKO")
-        val presenter = LoginPresenter(view)
+        val presenter = LoginPresenter(view, RxView.visibility(progressView), RxView.visibility(loginFormView), RxTextView.textChanges(emailView), RxTextView.textChanges(passwordView), RxTextView.errorRes(emailView), RxTextView.errorRes(passwordView), RxView.focusChanges(emailView), RxView.focusChanges(passwordView))
         // When
         presenter.attemptLogin()
         // Then
@@ -46,7 +46,7 @@ class LoginPresenterTest {
     fun checkEmailFieldError() {
         // Given
         val view = LoginViewMock("MarcinMoskala", "KOKOKOKO")
-        val presenter = LoginPresenter(view)
+        val presenter = LoginPresenter(view, RxView.visibility(progressView), RxView.visibility(loginFormView), RxTextView.textChanges(emailView), RxTextView.textChanges(passwordView), RxTextView.errorRes(emailView), RxTextView.errorRes(passwordView), RxView.focusChanges(emailView), RxView.focusChanges(passwordView))
         // When
         presenter.attemptLogin()
         // Then
@@ -57,7 +57,7 @@ class LoginPresenterTest {
     fun checkPasswordFieldErrored() {
         // Given
         val view = LoginViewMock("marcinmoskala@gmail.com", "KOKO")
-        val presenter = LoginPresenter(view)
+        val presenter = LoginPresenter(view, RxView.visibility(progressView), RxView.visibility(loginFormView), RxTextView.textChanges(emailView), RxTextView.textChanges(passwordView), RxTextView.errorRes(emailView), RxTextView.errorRes(passwordView), RxView.focusChanges(emailView), RxView.focusChanges(passwordView))
         // When
         presenter.attemptLogin()
         // Then
@@ -77,7 +77,7 @@ class LoginPresenterTest {
                 onLoginError = { /* Then */ assertEquals(errorMessage, it.message) },
                 onLoginSuccess = { returnedToken -> assert(false) }
         )
-        val presenter = LoginPresenter(view)
+        val presenter = LoginPresenter(view, RxView.visibility(progressView), RxView.visibility(loginFormView), RxTextView.textChanges(emailView), RxTextView.textChanges(passwordView), RxTextView.errorRes(emailView), RxTextView.errorRes(passwordView), RxView.focusChanges(emailView), RxView.focusChanges(passwordView))
         // When
         presenter.attemptLogin()
         waitUntilAllUnsubscribed(presenter)
@@ -96,7 +96,7 @@ class LoginPresenterTest {
                 onLoginError = { assert(false) },
                 onLoginSuccess = { returnedToken -> /* Then */ assertEquals(token, returnedToken) }
         )
-        val presenter = LoginPresenter(mockedView)
+        val presenter = LoginPresenter(mockedView, RxView.visibility(progressView), RxView.visibility(loginFormView), RxTextView.textChanges(emailView), RxTextView.textChanges(passwordView), RxTextView.errorRes(emailView), RxTextView.errorRes(passwordView), RxView.focusChanges(emailView), RxView.focusChanges(passwordView))
         presenter.attemptLogin()
         // When
         waitUntilAllUnsubscribed(presenter)
