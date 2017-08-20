@@ -3,6 +3,7 @@ package com.mvtest.marcinmoskala.mvtest
 import android.content.Context
 import android.support.annotation.IdRes
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import rx.Observable
@@ -10,7 +11,7 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
-inline fun <reified T> AppCompatActivity.bindView(viewId: Int) = lazy { findViewById(viewId) as T }
+inline fun <reified T: View> AppCompatActivity.bindView(viewId: Int) = lazy { findViewById<T>(viewId) }
 
 fun <T> Observable<T>.applySchedulers(): Observable<T> =
         subscribeOn(Schedulers.io())

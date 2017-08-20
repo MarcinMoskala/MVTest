@@ -3,24 +3,22 @@ package com.mvtest.marcinmoskala.mvtest
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import com.mvtest.marcinmoskala.mvtest.databinding.ActivityLoginBinding
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity(), LoginView {
 
-    val presenter by lazy { LoginViewModel(this) }
+    private val viewModel by lazy { LoginViewModel(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        View.VISIBLE
-        val binding: ActivityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login)
-        binding.viewmodel = LoginViewModel(this)
+        DataBindingUtil.setContentView<ActivityLoginBinding>(this, R.layout.activity_login)
+                .also { it.viewmodel = viewModel }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter.onDestroy()
+        viewModel.onDestroy()
     }
 
     override fun requestEmailFocus() {

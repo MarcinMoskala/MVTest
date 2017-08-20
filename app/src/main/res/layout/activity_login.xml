@@ -1,4 +1,5 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data
@@ -47,12 +48,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <AutoCompleteTextView
+                    <EditText
                         android:id="@+id/emailView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_email"
-                        android:text="@{viewmodel.email}"
+                        app:errorId="@{viewmodel.getEmailErrorId()}"
+                        android:text="@={viewmodel.email}"
                         android:inputType="textEmailAddress"
                         android:maxLines="1" />
 
@@ -67,8 +69,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_password"
-                        android:text="@{viewmodel.password}"
-                        android:imeActionId="@+id/sendLoginRequest"
+                        app:errorId="@{viewmodel.getPasswordErrorId()}"
+                        android:text="@={viewmodel.password}"
                         android:imeActionLabel="@string/action_sign_in_short"
                         android:imeOptions="actionUnspecified"
                         android:inputType="textPassword"

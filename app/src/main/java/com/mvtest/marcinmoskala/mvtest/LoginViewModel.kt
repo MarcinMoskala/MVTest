@@ -1,20 +1,19 @@
 package com.mvtest.marcinmoskala.mvtest
 
-import android.databinding.BaseObservable
 import android.databinding.ObservableField
 import rx.Subscription
 
 class LoginViewModel(val view: LoginView) {
 
-    val loginUseCase by lazy { LoginUseCase() }
-    val validateLoginFieldsUseCase by lazy { ValidateLoginFieldsUseCase() }
-    var subscriptions: List<Subscription> = emptyList()
+    private val loginUseCase by lazy { LoginUseCase() }
+    private val validateLoginFieldsUseCase by lazy { ValidateLoginFieldsUseCase() }
+    private var subscriptions: List<Subscription> = emptyList()
 
     var progressVisible = ObservableField(false)
     var email = ObservableField("")
     var password = ObservableField("")
-    var visiblePasswordErrorId = ObservableField<Int?>(null)
-    var visibleEmailErrorId = ObservableField<Int?>(null)
+    var passwordErrorId = ObservableField<Int?>(null)
+    var emailErrorId = ObservableField<Int?>(null)
 
     fun onDestroy() {
         subscriptions.forEach { it.unsubscribe() }
@@ -29,8 +28,8 @@ class LoginViewModel(val view: LoginView) {
     private fun validateFieldsAndSendLoginRequest(emailVal: String, passwordVal: String) {
         subscriptions += validateLoginFieldsUseCase.validateLogin(emailVal, passwordVal)
                 .smartSubscribe { (emailErrorId, passwordErrorId) ->
-                    visiblePasswordErrorId.set(passwordErrorId)
-                    visibleEmailErrorId.set(emailErrorId)
+                    this.passwordErrorId.set(passwordErrorId)
+                    this.emailErrorId.set(emailErrorId)
                     when {
                         emailErrorId != null -> view.requestEmailFocus()
                         passwordErrorId != null -> view.requestPasswordFocus()
