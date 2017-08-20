@@ -27,15 +27,17 @@ class LoginViewModel(val view: LoginView) {
 
     private fun validateFieldsAndSendLoginRequest(emailVal: String, passwordVal: String) {
         subscriptions += validateLoginFieldsUseCase.validateLogin(emailVal, passwordVal)
-                .smartSubscribe { (emailErrorId, passwordErrorId) ->
-                    this.passwordErrorId.set(passwordErrorId)
-                    this.emailErrorId.set(emailErrorId)
-                    when {
-                        emailErrorId != null -> view.requestEmailFocus()
-                        passwordErrorId != null -> view.requestPasswordFocus()
-                        else -> sendLoginRequest(emailVal, passwordVal)
-                    }
-                }
+                .smartSubscribe(
+                        onSuccess = { (emailErrorId, passwordErrorId) ->
+                            this.passwordErrorId.set(passwordErrorId)
+                            this.emailErrorId.set(emailErrorId)
+                            when {
+                                emailErrorId != null -> view.requestEmailFocus()
+                                passwordErrorId != null -> view.requestPasswordFocus()
+                                else -> sendLoginRequest(emailVal, passwordVal)
+                            }
+                        }
+                )
     }
 
     private fun sendLoginRequest(email: String, password: String) {
